@@ -1,0 +1,96 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Represents a farmer's credit profile",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "name": { "type": "string" },
+        "landOwned": { "type": "number", "description": "Land owned in acres" },
+        "annualIncome": { "type": "number" },
+        "existingLoans": { "type": "number" },
+        "creditScore": { "type": "number" },
+        "activeLoansCount": { "type": "number" },
+        "outstandingAmount": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "name", "landOwned", "annualIncome"]
+    },
+    "LoanApplication": {
+      "title": "Loan Application",
+      "description": "A farmer's loan application details",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "status": { "type": "string", "enum": ["Submitted", "Verification", "Inspection", "Approval", "Disbursement"] },
+        "personalDetails": {
+          "type": "object",
+          "properties": {
+            "fullName": { "type": "string" },
+            "phone": { "type": "string" },
+            "address": { "type": "string" }
+          }
+        },
+        "farmDetails": {
+          "type": "object",
+          "properties": {
+            "landSize": { "type": "number" },
+            "cropType": { "type": "string" },
+            "location": { "type": "string" }
+          }
+        },
+        "loanDetails": {
+          "type": "object",
+          "properties": {
+            "amount": { "type": "number" },
+            "purpose": { "type": "string" },
+            "tenureMonths": { "type": "number" }
+          }
+        },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "EMISchedule": {
+      "title": "EMI Schedule",
+      "description": "Repayment schedule for a loan",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "loanId": { "type": "string" },
+        "userId": { "type": "string" },
+        "installments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "month": { "type": "number" },
+              "amount": { "type": "number" },
+              "principal": { "type": "number" },
+              "interest": { "type": "number" },
+              "balance": { "type": "number" },
+              "status": { "type": "string", "enum": ["Paid", "Pending"] },
+              "dueDate": { "type": "string", "format": "date-time" }
+            }
+          }
+        }
+      }
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profiles"
+    },
+    "/loans/{loanId}": {
+      "schema": "LoanApplication",
+      "description": "Loan applications"
+    },
+    "/emiSchedules/{scheduleId}": {
+      "schema": "EMISchedule",
+      "description": "EMI schedules for loans"
+    }
+  }
+}
